@@ -1,62 +1,68 @@
-import React, { useState } from 'react'
+import {useState} from 'react'
 import SearchBar from './components/forms/SearchBar'
 import ProductTable from './components/products/ProductTable';
+import InputWithTimer from "./components/InputWithTimer.jsx";
 
 
 const PRODUCTS = [
-  { category: "Sporting Goods", price: "$49.99", stocked: true, name: "Football" },
-  { category: "Sporting Goods", price: "$9.99", stocked: true, name: "Baseball" },
-  { category: "Sporting Goods", price: "$29.99", stocked: false, name: "Basketball" },
-  { category: "Electronics", price: "$99.99", stocked: true, name: "iPod Touch" },
-  { category: "Electronics", price: "$399.99", stocked: false, name: "iPhone 5" },
-  { category: "Electronics", price: "$199.99", stocked: true, name: "Nexus 7" }
+    {category: "Sporting Goods", price: "$49.99", stocked: true, name: "Football"},
+    {category: "Sporting Goods", price: "$9.99", stocked: true, name: "Baseball"},
+    {category: "Sporting Goods", price: "$29.99", stocked: false, name: "Basketball"},
+    {category: "Electronics", price: "$99.99", stocked: true, name: "iPod Touch"},
+    {category: "Electronics", price: "$399.99", stocked: false, name: "iPhone 5"},
+    {category: "Electronics", price: "$199.99", stocked: true, name: "Nexus 7"}
 ];
 
 function App() {
- 
 
-  const [maxPrice, setMaxPrice] = useState(Infinity)
 
-  const [showOnlyStocked, setShowOnlyStocked] = useState(false)
+    const [maxPrice, setMaxPrice] = useState(Infinity)
 
-  const [search, setSearch] = useState('')
+    const [showOnlyStocked, setShowOnlyStocked] = useState(false)
 
-  const filteredProducts = PRODUCTS.filter(product => {
-    if (showOnlyStocked && !product.stocked) {
-      return false
+    const [search, setSearch] = useState('')
+
+    const filteredProducts = PRODUCTS.filter(product => {
+        if (showOnlyStocked && !product.stocked) {
+            return false
+        }
+
+        if (search && !product.name.toLowerCase().includes(search.toLowerCase())) {
+            return false
+        }
+
+        if (maxPrice && Number(product.price.substring(1)) > maxPrice) {
+            return false
+        }
+
+        return true
+    })
+
+    const reset = () => {
+        setMaxPrice(Infinity)
+        setShowOnlyStocked(false)
+        setSearch('')
     }
 
-    if (search && !product.name.toLowerCase().includes(search.toLowerCase())) {
-      return false
-    }
 
-    if (maxPrice && Number(product.price.substring(1)) > maxPrice) {
-      return false
-    }
+    return <div className="flex flex-col justify-center">
+        <SearchBar
+            showOnlyStocked={showOnlyStocked}
+            onShowOnlyStockedChanged={setShowOnlyStocked}
+            search={search}
+            onSearchChanged={setSearch}
+            setMaxPrice={setMaxPrice}
+            maxPrice={maxPrice}
 
-    return true
-  })
+        />
+        <button onClick={reset} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Reset
+        </button>
+        <ProductTable products={filteredProducts}/>
 
-  const reset = () => {
-    setMaxPrice(Infinity)
-    setShowOnlyStocked(false)
-    setSearch('')
-  }
+        <InputWithTimer time={5} placeholder="Timer..."/>
 
-  return <>
-    <SearchBar 
-      showOnlyStocked={showOnlyStocked} 
-      onShowOnlyStockedChanged={setShowOnlyStocked}
-      search={search}
-      onSearchChanged={setSearch}
-      setMaxPrice={setMaxPrice}
-      maxPrice={maxPrice}
 
-    />
-    <button onClick={reset} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Reset</button>
-    <ProductTable products={filteredProducts}/>
-    
-  </>
+    </div>
 
 }
 
