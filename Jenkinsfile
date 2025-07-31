@@ -5,7 +5,7 @@ pipeline {
         AWS_DEFAULT_REGION = 'eu-west-3'
         CLOUDFRONT_DISTRIBUTION_ID = 'E378KC19I5UFN4'
         EC2_HOST = 'ec2-15-236-145-144.eu-west-3.compute.amazonaws.com'
-        DEPLOY_PATH = '/app/dist/'
+        DEPLOY_PATH = '/app/dist'
     }
     
     tools {
@@ -44,8 +44,8 @@ pipeline {
                             cd /tmp
                             sudo tar -xzf dist.tar.gz -C ${DEPLOY_PATH}/
                             sudo chown -R nginx:nginx ${DEPLOY_PATH}
-                            sudo chmod -R 644 ${DEPLOY_PATH}*
-                            sudo find ${DEPLOY_PATH} -type d -exec chmod 755 {} \;
+                            sudo chmod -R 644 ${DEPLOY_PATH}/*
+                            sudo find ${DEPLOY_PATH} -type d -exec chmod 755 {} \\;
                             sudo nginx -t && sudo systemctl reload nginx
                             rm -f dist.tar.gz
                         '
