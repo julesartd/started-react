@@ -8,10 +8,6 @@ pipeline {
         DEPLOY_PATH = '/app/dist'
     }
     
-    tools {
-        nodejs 'NodeJS'
-    }
-    
     stages {
         stage('Install Dependencies') {
             steps {
